@@ -1,7 +1,7 @@
 // Topic: Looping using the while statement
 //
 // Program requirements:
-// * Counts down from 5 to 1, displays the countdown
+// * Counts down from 10 to 1, displays the countdown
 //   in the terminal, then prints "done!" when complete.
 //
 // Notes:
@@ -10,4 +10,11 @@
 // * Print the variable within the while loop
 // * Do not use break to exit the loop
 
-fn main() {}
+fn main() {
+    let mut countdown_var = 10;
+    while countdown_var >= 1 {
+        println!("{countdown_var:?}");
+        countdown_var-=1;
+    }
+    println!("done")
+}

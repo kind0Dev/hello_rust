@@ -31,10 +31,10 @@ Phase 3: Control Flow & Loops
 ✅ [✅] Learn If Statements
 ✅ [✅] Learn If-Else Statements
 ✅ [✅] Complete Activity-Logic with If-Else
-✅ [] Learn Match Expression
-✅ [] Complete Activity-Basic Match
-✅ [] Learn Loop, While Loop
-✅ [] Complete Activity-Loops
+✅ [✅] Learn Match Expression
+✅ [✅] Complete Activity-Basic Match
+✅ [✅] Learn Loop, While Loop
+✅ [✅] Complete Activity-Loops
 
 Phase 4: Structs, Enums & Tuples
 ✅ [] Learn Structs & Enums
