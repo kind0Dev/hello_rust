@@ -1,5 +1,4 @@
-                                                                                                                
-                                                                                                                
+```javascript                                                                                                                                                                                                                    
   ,---,                  ,--,      ,--,                                                                 ___     
 ,--.' |                ,--.'|    ,--.'|                                                               ,--.'|_   
 |  |  :                |  | :    |  | :       ,---.             __  ,-.          ,--,                 |  | :,'  
@@ -74,3 +73,4 @@ Phase 9: Project & Testing
 ✅ [ ] Learn Testing in Rust
 ✅ [ ] Complete Activity-Testing
 ✅ [ ] Work on Mini-Project (Bills Management)
+```
