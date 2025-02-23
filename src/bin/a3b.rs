@@ -9,4 +9,13 @@
 // * Use an if..else if..else block to determine which message to display
 // * Use the println macro to display messages to the terminal
 
-fn main() {}
+fn main() {
+    let gt_5 = 4;
+    if gt_5 > 5 {
+        println!("greaterthan 5")
+    } else if gt_5 < 5 {
+        println!("lessthan 5")
+    }else {
+        println!("equal to 5")
+    }
+}
