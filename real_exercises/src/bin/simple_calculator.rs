@@ -15,28 +15,44 @@ use std::io;
 fn get_input() -> String {
     let mut input = String::new();
     io::stdin().read_line(&mut input).expect("Failed to read input");
-    return input.trim().to_string();
+    input.trim().to_string()
 }
+
 fn get_number(input: &String) -> Result<f64, String> {
-    //let mut input = String::new();
-    //io::stdin().read_line(&mut input).expect("Failed to read input");
-    match input.parse::<f64>(){
-        Ok(num) => Ok(num),
-        _ => Err("Invalid number!".to_string()),
-    }
-    
-    //map_err(|_| "Invalid number!".to_string())
+    input.parse::<f64>().map_err(|_| "Invalid number!".to_string())
 }
+
+fn get_valid_number() -> f64 {
+    loop {
+        println!("Enter a number:");
+        let input = get_input();
+        if ["exit", "quit", "e", "E"].contains(&input.as_str()) {
+            println!("Goodbye!");
+            std::process::exit(0);
+        }
+        match get_number(&input) {
+            Ok(num) => return num,
+            Err(_) => println!("Invalid number! Please enter a valid number."),
+        }
+    }
+}
+
 fn get_op() -> Result<char, String> {
-    let mut op = String::new();
-    io::stdin().read_line(&mut op).expect("Failed to read input");
-    let op = op.trim().chars().next().unwrap_or(' ');
+    let input = get_input();
+    let op = input.chars().next().ok_or("Invalid operator!".to_string())?;
     match op {
-        '+' => Ok(op),
-        '-' => Ok(op),
-        '*' => Ok(op),
-        '/' => Ok(op),
+        '+' | '-' | '*' | '/' => Ok(op),
         _ => Err("Invalid operator!".to_string()),
+    }
+}
+
+fn get_valid_op() -> char {
+    loop {
+        println!("Enter an operator (+, -, *, /):");
+        match get_op() {
+            Ok(op) => return op,
+            Err(_) => println!("Invalid operator! Please enter +, -, *, or /."),
+        }
     }
 }
 
@@ -45,55 +61,36 @@ fn calculate(a: f64, b: f64, op: char) -> Result<f64, String> {
         '+' => Ok(a + b),
         '-' => Ok(a - b),
         '*' => Ok(a * b),
-        '/' => if b == 0.0 { Err("Cannot divide by zero!".to_string()) } else { Ok(a / b) },
+        '/' => {
+            if b == 0.0 {
+                Err("Cannot divide by zero!".to_string())
+            } else {
+                Ok(a / b)
+            }
+        }
         _ => Err("Invalid operator!".to_string()),
     }
 }
 
 fn main() {
+    loop {
+        println!("Welcome to Rust CLI Calculator!");
+        
+        let a = get_valid_number();
+        let op = get_valid_op();
+        let b = get_valid_number();
 
-loop {
-    println!("Welcome to Rust CLI Calculator:");
-    println!("please enter a number to begin:");
-    let input = get_input();
-    if input == "exit" || input == "quit" || input == "e" || input == "E" {
-        println!("goodbye");
-        break;
-    }
-    let mut a;
-    a = get_number(&input);
-    while a == Err("Invalid number!".to_string()) {
-        println!("Invalid Number please insert a real number");
-        a = get_number(&input);
-    }
-    
-    println!("Enter operator (+, -, *, /):");
-    let mut operation;
-    operation = get_op();
-    while operation == Err("Invalid operator!".to_string()) {
-        println!("Invalid math operator please insert a real number");
-        operation = get_op();
-    }
+        match calculate(a, b, op) {
+            Ok(result) => println!("Result: {} {} {} = {}", a, op, b, result),
+            Err(e) => println!("Error: {}", e),
+        }
 
-
-    println!("Enter second number:");
-    let input2 = get_input();
-    if input2 == "exit" || input2 == "quit" || input2 == "e" || input2 == "E" {
-        println!("goodbye");
-        break;
-    }
-    let mut b;
-    b = get_number(&input2);
-    while b == Err("Invalid number!".to_string()) {
-        println!("Invalid Number please insert a real number");
-        b = get_number(&input2);
-    }
-    let x = a.expect("invalid number");
-    let y = b.expect("invalid number");
-    let op = operation.expect("invalid operation");
-    match calculate(x, y, op) {
-        Ok(result) => println!("Result: {x} {op} {y} = {result}"),
-        Err(e) => println!("Error: {}", e),
+        println!("Do you want to perform another calculation? (yes/no)");
+        let again = get_input();
+        if again.to_lowercase() != "yes" {
+            println!("Goodbye!");
+            break;
+        }
     }
 }
-}
+
