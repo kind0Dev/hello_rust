@@ -37,10 +37,10 @@ Phase 3: Control Flow & Loops
 ✅ [✅] Complete Activity-Loops
 
 Phase 4: Structs, Enums & Tuples
-✅ [] Learn Structs & Enums
-✅ [] Complete Activity-Structs & Enums
-✅ [] Learn Tuples
-✅ [] Complete Activity-Tuples
+✅ [✅] Learn Structs & Enums
+✅ [✅] Complete Activity-Structs & Enums
+✅ [✅] Learn Tuples
+✅ [✅] Complete Activity-Tuples
 
 Phase 5: Ownership & Memory Concepts
 ✅ [] Learn Ownership
