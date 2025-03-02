@@ -28,18 +28,84 @@ Goodbye!
  */
 
 use std::io;
-
-struct Account{
-    name: String,
-    id: i32,
-    balance: f64
-}
 enum Actions {
     Deposit,
     Withdraw,
     CheckBalance,
     Exit
 }
+struct Account{
+    name: String,
+    id: i32,
+    balance: f64
+}
+impl Account {
+    fn acct_creation() -> Self{
+        println!("Enter you name:");
+        let name = get_input();
+        let id =  1;
+        println!("Welcome {name}, Account created successfully! Your account ID is {:?}.", id);
+        return Account{
+            name: name,
+            id: id,
+            balance: 0.0
+        };
+    }
+
+    fn deposit(&mut self) {
+        println!("Enter deposit amount:");
+        let amount = get_deposit_amount();
+        match amount{
+            Ok(num) => self.increment_balance(num),
+            Err(e) => println!("Deposit unsuccessful! Error: {:?}", e)
+        }
+        self.user_option();
+    }
+    
+    fn withdrawal(&mut self) {
+        println!("Enter withdraw amount:");
+        let amount = get_deposit_amount();
+        match amount{
+            Ok(num) => self.decrement_balance(num),
+            Err(e) => println!("withdrawal unsuccessful! Error: {:?}", e)
+        }
+        self.user_option();
+    }
+
+    fn check_balance(&mut self){
+        println!("The Account with {:} id has a balance of {:}", self.id, self.balance);
+        self.user_option();
+    }
+
+    fn print_acct_info(&self){
+        println!("Account Name: {:}", self.name);
+        println!("Account id: {:?}", self.id);
+        println!("Account Balance: {:?}", self.balance);
+    }
+
+    fn user_option(&mut self){
+        match get_action(){
+            Ok(Actions::Deposit) => self.deposit(),
+            Ok(Actions::Withdraw) => self.withdrawal(),
+            Ok(Actions::CheckBalance) => self.check_balance(),
+            Ok(Actions::Exit) => exit(),
+            Err(e) => println!("there was a problem with you option {:}", e)
+        }
+    }
+
+    fn increment_balance( &mut self,  num: f64){
+        self.balance += num;
+        println!("Deposit successful! New balance: {:?}", self.balance);
+        self.print_acct_info()
+    }
+
+    fn decrement_balance(&mut self,  num: f64){
+        self.balance -= num;
+        println!("withdrawal successful! New balance: {:?}", self.balance);
+        self.print_acct_info()
+    }
+}
+
 
 
 fn get_input() -> String {
@@ -48,79 +114,47 @@ fn get_input() -> String {
     input.trim().to_string()
 }
 
-fn get_deposit_amount(input: &String) -> Result<f64, String> {
-    input.parse::<f64>().map_err(|_| "invalid deposit amount, not a number!".to_string())
+fn get_deposit_amount() -> Result<f64, String> {
+    let mut input;
+    let mut amount;
+        loop {
+            input = get_input();
+            amount = input.parse::<f64>().map_err(|_| "invalid deposit amount, not a number!".to_string());
+            
+            if amount == Err("invalid deposit amount, not a number!".to_string()){
+                println!("Please enter a valid number")
+            }else{
+                break
+            }
+        }
+        return amount;
 }
 
-fn get_action_number(input: &String) -> Result<Actions, String> {
-    let action_number = input.parse::<i32>().map_err(|_| "invalid action selected, not a number!".to_string());
-    match action_number {
-        Ok(1) => return Ok(Actions::Deposit),
-        Ok(2) => return Ok(Actions::Withdraw),
-        Ok(3)=> return Ok(Actions::CheckBalance),
-        Ok(4) => return Ok(Actions::Exit),
-        _ => Err("No Action for that".to_string())
+fn get_action() -> Result<Actions, String> {
+    let mut action_number;
+    loop {
+        println!("Select an action:
+            1. Deposit
+            2. Withdraw
+            3. Check Balance
+            4. Exit");
+            let action = get_input();
+        action_number = action.parse::<i32>().map_err(|_| "invalid action selected, not a number!".to_string());
+        
+        match action_number {
+            Ok(1) => return Ok(Actions::Deposit),
+            Ok(2) => return Ok(Actions::Withdraw),
+            Ok(3)=> return Ok(Actions::CheckBalance),
+            Ok(4) => return Ok(Actions::Exit),
+            _ => println!("Please enter a valid action")
+        };
+        
     }
-}
-fn acct_creation() -> Account{
-    println!("Enter you name:");
-    let name = get_input();
-    let id =  1;
-    println!("Welcome {name}, Account created successfully! Your account ID is {:?}.", id);
-    return Account{
-        name: name,
-        id: id,
-        balance: 0.0
-    };
-}
-
-fn user_option(curr_user: &Account){
-    let action = get_input();
-    match get_action_number(&action){
-        Ok(Actions::Deposit) => deposit(&curr_user),
-        Ok(Actions::Withdraw) => withdrawal(&curr_user),
-        Ok(Actions::CheckBalance) => print_acct_info(&curr_user),
-        Ok(Actions::Exit) => exit(),
-        Err(e) => println!("there was a problem with you option {:}", e)
-    }
-}
-
-fn deposit(account: &Account) {
-    println!("Enter deposit amount:");
-    let input = get_input();
-    let amount = get_deposit_amount(&input);
-    match amount{
-        Ok(num) => increment_balance(&account,  num),
-        Err(e) => println!("Deposit unsuccessful! Error: {:?}", e)
-    }
-}
-
-fn withdrawal(account: &Account) {
-    println!("Enter deposit amount:");
-    let input = get_input();
-    let amount = get_deposit_amount(&input);
-    match amount{
-        Ok(num) => decrement_balance(&account,  num),
-        Err(e) => println!("withdrawal unsuccessful! Error: {:?}", e)
-    }
-}
-
-fn increment_balance( mut account: &Account,  num: f64){
-    let mut clone_acct= account.clone_from(&account);
-    // = &mut account.balance;
-    
-    clone_acct = clone_acct + num;
 
 
-    println!("Deposit successful! New balance: {:?}", account.balance);
-    print_acct_info(&account)
 }
 
-fn decrement_balance(mut account: &Account,  num: f64){
-    account.balance -= num;
-    println!("withdrawal successful! New balance: {:?}", account.balance);
-    print_acct_info(&account)
-}
+
 fn exit(){
     println!("Goodbye!");
     std::process::exit(0);
@@ -128,25 +162,11 @@ fn exit(){
 
 
 
-
-
-fn print_acct_info(account: &Account){
-    println!("Account Name: {:}", account.name);
-    println!("Account id: {:?}", account.id);
-    println!("Account Balance: {:?}", account.balance);
-}
-
 fn main(){
     println!("Welcome to Rust Bank System!");
-    let mut user_accout = acct_creation();
-    print_acct_info(&user_accout);
-    loop{
-    println!("Select an action:
-    1. Deposit
-    2. Withdraw
-    3. Check Balance
-    4. Exit");
-        user_option(&user_accout);
-    }
+    let mut user_account = Account::acct_creation();
+    user_account.print_acct_info();
+    user_account.user_option();
+    
 
 }
