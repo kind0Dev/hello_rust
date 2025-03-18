@@ -43,21 +43,21 @@ Phase 4: Structs, Enums & Tuples
 ✅ [✅] Complete Activity-Tuples
 
 Phase 5: Ownership & Memory Concepts
-✅ [] Learn Ownership
-✅ [] Complete Activity-Ownership
-✅ [] Learn Intermediate & Advanced Memory Concepts
-✅ [] Learn Implementing Functionality
+✅ [✅] Learn Ownership
+✅ [✅] Complete Activity-Ownership
+✅ [✅] Learn Intermediate & Advanced Memory Concepts
+✅ [✅] Learn Implementing Functionality
 
 Phase 6: Collections (Vectors, Strings, HashMaps)
-✅ [] Learn Vectors
-✅ [] Complete Activity-Vectors & Loops
-✅ [] Learn Strings
-✅ [] Complete Activity-Strings
-✅ [] Learn HashMaps
-✅ [] Complete Activity-HashMaps
+✅ [✅] Learn Vectors
+✅ [✅] Complete Activity-Vectors & Loops
+✅ [✅] Learn Strings
+✅ [✅] Complete Activity-Strings
+✅ [✅] Learn HashMaps
+✅ [✅] Complete Activity-HashMaps
 
 Phase 7: Error Handling & Documentation
-✅ [] Learn Option & Result Types
+✅ [✅] Learn Option & Result Types
 ✅ [] Complete Activity-Option & Result
 ✅ [] Learn Error Handling & Custom Error Types
 ✅ [] Learn Generating Documentation

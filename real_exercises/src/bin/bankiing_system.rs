@@ -64,11 +64,34 @@ impl Account {
     
     fn withdrawal(&mut self) {
         println!("Enter withdraw amount:");
-        let amount = get_deposit_amount();
-        match amount{
-            Ok(num) => self.decrement_balance(num),
-            Err(e) => println!("withdrawal unsuccessful! Error: {:?}", e)
-        }
+        
+            let amount = get_deposit_amount();
+
+            match amount{
+                Ok(num) => if num > self.balance { 
+                    println!("insufficient balance, you balance is: {:?}", self.balance); 
+                    println!("will you like to go back to the main-menu choose 1 or 2 to continue withdraw:");
+                    println!("1. Yes");        
+                    println!("2. No");
+                    loop {
+                        let input_option = get_deposit_amount().unwrap() as u8;
+                        if input_option == 1 {
+                            self.user_option();
+                        } else if input_option == 2 {
+                            self.withdrawal();
+                        } else {
+                            println!("invalid option please");
+                            continue;
+                        }
+                        break;
+                    }
+                } else { 
+                    self.decrement_balance(num)
+                },
+                Err(e) => println!("withdrawal unsuccessful! Error: {:?}", e)
+            }
+        
+
         self.user_option();
     }
 
