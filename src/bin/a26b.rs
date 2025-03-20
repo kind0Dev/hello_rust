@@ -15,11 +15,13 @@
 // * After moving the functions into modules, try running
 //   `cargo check --bin a26b` to get a listing of required code changes
 
-fn trim(msg: &str) -> &str {
+mod string_fmt {
+
+pub fn trim(msg: &str) -> &str {
     msg.trim()
 }
 
-fn capitalize(msg: &str) -> std::borrow::Cow<'_, str> {
+pub fn capitalize(msg: &str) -> std::borrow::Cow<'_, str> {
     if let Some(letter) = msg.get(0..1) {
         format!("{}{}", letter.to_uppercase(), &msg[1..msg.len()]).into()
     } else {
@@ -27,21 +29,26 @@ fn capitalize(msg: &str) -> std::borrow::Cow<'_, str> {
     }
 }
 
-fn exciting(msg: &str) -> String {
+pub fn exciting(msg: &str) -> String {
     format!("{}!", msg)
 }
+}
 
-fn add(lhs: isize, rhs: isize) -> isize {
+mod math {
+pub fn add(lhs: isize, rhs: isize) -> isize {
     lhs + rhs
 }
-fn sub(lhs: isize, rhs: isize) -> isize {
+pub fn sub(lhs: isize, rhs: isize) -> isize {
     lhs - rhs
 }
-fn mul(lhs: isize, rhs: isize) -> isize {
+pub fn mul(lhs: isize, rhs: isize) -> isize {
     lhs * rhs
+}
 }
 
 fn main() {
+    use crate::math::*;
+    use crate::string_fmt::*;
     // Part 1: math functions
     let result = {
         let two_plus_two = add(2, 2);

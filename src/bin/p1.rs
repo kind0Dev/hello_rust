@@ -29,4 +29,58 @@
 // * A vector is the easiest way to store the bills at stage 1, but a
 //   hashmap will be easier to work with at stages 2 and 3.
 
-fn main() {}
+use std::{io::{self, Error}, num::ParseIntError};
+
+enum Menu {
+    Add,
+    View,
+}
+impl Menu {
+    fn match_menu(opt:i32) -> Option<Self>{
+        match opt {
+            1 => Some(Self::Add),
+            2 => Some(Self::View),
+            _ => None
+        }
+    }
+}
+struct Bill {
+    name: String,
+    balance: i32
+}
+
+impl Bill {
+    fn new() -> Result<Self, Error> {
+        let name = get_input()?;
+        let balance = get_input()?.parse().unwrap();
+
+        Ok(Self { name, balance})
+    }
+
+
+}
+
+fn get_input() -> io::Result<String>{
+    let mut input = String::new();
+    io::stdin().read_line(&mut input)?;
+    Ok(input.trim().to_owned())
+}
+
+fn match_opt() -> Result<u8, ParseIntError>{
+    let opt = get_input().unwrap().parse::<u8>()?;
+        Ok(opt) 
+
+}
+
+fn main() {
+    let mut bill_list = vec![];
+    println!("Welcome what will you like to do?");
+    println!("1. Add Bill");
+    println!("2. View Bill");
+    let opt_chos = match_opt()
+    let user = Bill::new();
+    match user {
+        Ok(bill ) => bill_list.push(bill),
+        Err(e) => println!("error: {:?}", e)
+    }
+}
