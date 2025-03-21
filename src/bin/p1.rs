@@ -29,58 +29,193 @@
 // * A vector is the easiest way to store the bills at stage 1, but a
 //   hashmap will be easier to work with at stages 2 and 3.
 
-use std::{io::{self, Error}, num::ParseIntError};
+use core::num;
+use std::collections::HashMap;
+use std::io::{self, Write};
 
-enum Menu {
-    Add,
-    View,
-}
-impl Menu {
-    fn match_menu(opt:i32) -> Option<Self>{
-        match opt {
-            1 => Some(Self::Add),
-            2 => Some(Self::View),
-            _ => None
-        }
-    }
-}
+#[derive(Debug, Clone)]
 struct Bill {
     name: String,
-    balance: i32
+    amount: f32,
 }
 
-impl Bill {
-    fn new() -> Result<Self, Error> {
-        let name = get_input()?;
-        let balance = get_input()?.parse().unwrap();
-
-        Ok(Self { name, balance})
+struct Bills {
+    bill: HashMap<String, Bill>
+}
+impl Bills {
+    fn new() -> Self {
+        Self { bill: HashMap::new() }
     }
 
+    fn add(&mut self, bill:Bill) {
+        self.bill.insert(bill.name.clone(), bill);
+    }
 
+    fn remove(&mut self, name:String){
+        if self.bill.remove(&name).is_some() {
+            println!("Bill removed successfully!");
+        } else {
+            println!("Bill not found.");
+        }
+    }
+
+    fn edit(&mut self, name:String) {
+
+        if let Some(bill) = self.bill.get_mut(&name) {
+            println!("Current amount: ${:.2}", bill.amount);
+            println!("Enter new amount or press enter to cancel:");
+            let new_amount = match read_input_amount() {
+                Some(num) => num,
+                None => {
+                    println!("Edit canceled.");
+                    return;
+                }
+            };
+            
+            bill.amount = new_amount;
+            println!("Bill updated successfully!");
+        } else {
+            println!("Bill not found.");
+        }
+    }
+
+    fn get_all(&self) -> HashMap<String, Bill> {
+        if self.bill.is_empty(){
+            println!("No bills available.");
+        } 
+        return self.bill.clone()
+        
+    
+        
+    }
 }
 
-fn get_input() -> io::Result<String>{
-    let mut input = String::new();
-    io::stdin().read_line(&mut input)?;
-    Ok(input.trim().to_owned())
+enum Menu {
+    AddBill,
+    ViewBill,
+    RemoveBill,
+    EditBill,
+    Exit
 }
-
-fn match_opt() -> Result<u8, ParseIntError>{
-    let opt = get_input().unwrap().parse::<u8>()?;
-        Ok(opt) 
+impl Menu {
+    fn new(opt:&str) -> Option<Self> {
+        match opt {
+            "1" => Some(Menu::AddBill),
+            "2" => Some(Menu::ViewBill),
+            "3" => Some(Menu::RemoveBill),
+            "4" => Some(Menu::EditBill),
+            "5" => Some(Menu::Exit),
+            _ => None,
+        }
+    }
 
 }
 
 fn main() {
-    let mut bill_list = vec![];
-    println!("Welcome what will you like to do?");
-    println!("1. Add Bill");
-    println!("2. View Bill");
-    let opt_chos = match_opt()
-    let user = Bill::new();
-    match user {
-        Ok(bill ) => bill_list.push(bill),
-        Err(e) => println!("error: {:?}", e)
+    let mut bills = Bills::new();
+
+    loop {
+        println!("\nInteractive Bill Manager");
+        println!("1. Add a bill");
+        println!("2. View bills");
+        println!("3. Remove a bill");
+        println!("4. Edit a bill");
+        println!("5. Exit");
+        print!("Choose an option: ");
+        io::stdout().flush().unwrap();
+
+        //let choice = ;
+        let choice_menu = match read_input() {
+            Some(str) => Menu::new(&str),
+            None => Some(Menu::Exit)
+        };
+        use crate::Menu::*;
+        match choice_menu {
+            Some(AddBill) => add_bill(&mut bills),
+            Some(ViewBill) => view_bills(&bills),
+            Some(RemoveBill) => remove_bill(&mut bills),
+            Some(EditBill) => edit_bill(&mut bills),
+            Some(Exit) => break,
+            _ => println!("Invalid option, try again."),
+        }
     }
+}
+
+fn add_bill(bills: &mut Bills) {
+    println!("Enter bill name:");
+    let name = match read_input() {
+        Some(str) => str,
+        None => return
+    };
+    println!("Enter amount:");
+    let amount: f32 = match read_input_amount() {
+        Some(val) => val,
+        None => return
+    };
+
+    let bill = Bill { name, amount };
+    bills.add(bill);
+    println!("Bill added successfully!");
+}
+
+fn view_bills(bills: &Bills) {
+    for bill in bills.get_all().values() {
+            println!("{}: ${:.2}", bill.name, bill.amount);
+        }
+    
+}
+
+fn remove_bill(bills: &mut Bills) {
+    println!("Enter bill name to remove:");
+    view_bills(bills);
+    let name = match read_input(){
+        Some(name) => name,
+        None => return
+    };
+    bills.remove(name);
+}
+
+fn edit_bill(bills: &mut Bills) {
+    println!("Enter bill name to edit:");
+    view_bills(bills);
+    let name = match read_input() {
+        Some(name) => name,
+        None => return
+    };
+    
+    bills.edit(name);
+}
+
+fn read_input() -> Option<String> {
+    let mut input = String::new();
+    while io::stdin().read_line(&mut input).is_err() {
+        println!("please enter you data again");
+    }
+    let input_trim = input.trim().to_owned();
+    if input_trim == "" {
+        return None
+    } else {
+        return Some(input_trim)
+    }
+}
+
+fn read_input_amount() -> Option<f32> {
+
+    println!("Amount:");
+    loop {
+        let input = match read_input() {
+            Some(input) => input,
+            None => return None,
+        };
+        if &input == "" {
+            return None;
+        }
+        let parsed_input: Result<f32, _> = input.parse();
+        match parsed_input {
+            Ok(amount) => return Some(amount),
+            Err(_) => println!("Please enter a number"),
+        }
+    }
+    
+
 }
