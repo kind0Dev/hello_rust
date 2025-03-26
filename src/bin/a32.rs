@@ -12,4 +12,33 @@
 
 const MOCK_DATA: &'static str = include_str!("mock-data.csv");
 
-fn main() {}
+struct Person<'a>{
+    title: Vec<&'a str>,
+    name: Vec<&'a str>
+}
+
+impl <'a> Person<'a> {
+    fn new(title:Vec<&'a str>,name:Vec<&'a str>) -> Self{
+        Self { title, name }
+    }
+
+    fn print(&self){
+
+        let zip = self.name.iter().zip(self.title.iter());
+        for (n, t) in zip {
+            println!("name: {:?} title: {:?}", n, t);
+            println!("")
+            
+        }
+
+    }
+}
+
+fn main() {
+    let data: Vec<_> = MOCK_DATA.split('\n').skip(1).collect();
+    let name: Vec<_> = data.iter().filter_map(|line|line.split(',').nth(1)).collect();
+    let title: Vec<_> = data.iter().filter_map(|line|line.split(',').nth(4)).collect();
+
+    let persons = Person::new(title, name);
+    persons.print();
+}

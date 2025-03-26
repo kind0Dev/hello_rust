@@ -58,16 +58,16 @@ Phase 6: Collections (Vectors, Strings, HashMaps)
 
 Phase 7: Error Handling & Documentation
 ✅ [✅] Learn Option & Result Types
-✅ [] Complete Activity-Option & Result
-✅ [] Learn Error Handling & Custom Error Types
-✅ [] Learn Generating Documentation
+✅ [✅] Complete Activity-Option & Result
+✅ [✅] Learn Error Handling & Custom Error Types
+✅ [✅] Learn Generating Documentation
 
 Phase 8: Advanced Concepts
-✅ [] Learn Traits
-✅ [] Complete Activity-Traits
-✅ [] Learn Generics & Trait Objects
-✅ [] Learn Ownership & Lifetimes
-✅ [] Complete Activity-Lifetimes
+✅ [✅] Learn Traits
+✅ [✅] Complete Activity-Traits
+✅ [✅] Learn Generics & Trait Objects
+✅ [✅] Learn Ownership & Lifetimes
+✅ [✅] Complete Activity-Lifetimes
 
 Phase 9: Project & Testing
 ✅ [] Learn Testing in Rust

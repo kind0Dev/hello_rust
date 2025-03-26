@@ -35,4 +35,21 @@ impl Priority for Guest {
     }
 }
 
-fn main() {}
+fn priority_level<T: Priority>(guest:T){
+    let prio_level = guest.get_priority();
+    println!("this has a {:?} level priority", prio_level)
+}
+
+fn priority_level2<T>(guest:T)
+where  T: Priority + std::fmt::Debug,
+{
+    let prio_level = guest.get_priority();
+    println!("{:?} has a {:?} level priority", guest, prio_level)
+}
+
+fn main() {
+    let guest1 = Guest;
+    let guest2 = ImportantGuest;
+    priority_level(guest1);
+    priority_level2(guest2);
+}

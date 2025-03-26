@@ -12,4 +12,5 @@ path = "src/activitylib/mod.rs"
 
 [dependencies]
 chrono = "0.4.40"
+#thiserror = "1.0.20"
 
