@@ -21,8 +21,52 @@
 // * Test your program by changing the vehicle status from both a storefront
 //   and from corporate
 
-struct Corporate;
+use std::{cell::RefCell, rc::Rc};
 
-struct StoreFront;
+#[derive(Debug, Clone)]
+enum VehicleStatus{
+    Available, 
+    Unavailable, 
+    Maintenance, 
+    Rented
+}
 
-fn main() {}
+#[derive(Debug, Clone)]
+struct RentalInfo{
+    vehicle_type: String,
+    vin_number: u64,
+    vehicle_status: VehicleStatus
+}
+
+type RentalsInfo = Rc<RefCell<Vec<RentalInfo>>>;
+
+#[derive(Debug)]
+struct Corporate(RentalsInfo);
+
+
+#[derive(Debug)]
+struct StoreFront(RentalsInfo);
+
+fn main() {
+    let benz = Rc::new(RefCell::new(vec![RentalInfo{
+        vehicle_type: "benz".to_string(),
+        vin_number: 20,
+        vehicle_status: VehicleStatus::Available
+    }]));
+
+    let corp = Corporate(Rc::clone(&benz));
+    let store = StoreFront(Rc::clone(&benz));
+
+    let new_info = vec![RentalInfo{
+        vehicle_type: "camry".to_string(),
+        vin_number: 50,
+        vehicle_status: VehicleStatus::Maintenance}];
+
+    dbg!(corp.0.borrow());
+    dbg!(store.0.borrow());
+    store.0.replace(new_info);
+    dbg!(store.0.borrow());
+    dbg!(corp.0.borrow());
+
+
+}

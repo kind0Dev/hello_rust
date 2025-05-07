@@ -21,13 +21,17 @@
 //   by telling the thread to self-terminate
 // * Use `cargo test --bin a39` to test your program to ensure all cases are covered
 
+use activitylib::msg;
 use crossbeam_channel::{unbounded, Receiver};
 use std::thread::{self, JoinHandle};
+use colored::*;
 
 enum LightMsg {
     // Add additional variants needed to complete the exercise
     ChangeColor(u8, u8, u8),
     Disconnect,
+    Off,
+    On,
 }
 
 enum LightStatus {
@@ -37,9 +41,55 @@ enum LightStatus {
 
 fn spawn_light_thread(receiver: Receiver<LightMsg>) -> JoinHandle<LightStatus> {
     // Add code here to spawn a thread to control the light bulb
+    thread::spawn(move || {
+        let mut light_status = LightStatus::Off;
+        loop {
+            if let Ok(msg) = receiver.recv() {
+                match msg {
+                    LightMsg::ChangeColor(r, g, b) => {
+                        println!("the light color is {}", "     ".on_truecolor(r,g,b));
+                        match light_status {
+                            LightStatus::Off => println!("light is OFF"),
+                            LightStatus::On => println!("light is ON")
+                        }
+                    },
+                    LightMsg::On => {
+                        println!("light is ON");
+                        light_status = LightStatus::On
+                    },
+                    LightMsg::Off => {
+                        println!("light is OFF");
+                        light_status = LightStatus::Off
+                    },
+                    LightMsg::Disconnect => {
+                        println!("light is Dissconected");
+                        light_status = LightStatus::Off
+                    }
+                }
+            } else {
+                println!("light is Dissconected");
+                light_status = LightStatus::Off            
+            }
+        }
+        light_status
+    })
 }
 
-fn main() {}
+
+
+fn main() {
+    let (s, r) = unbounded();
+    let light = spawn_light_thread(r);
+    s.send(LightMsg::On);
+    s.send(LightMsg::ChangeColor(23, 24, 50));
+    s.send(LightMsg::ChangeColor(255, 255, 255));
+    s.send(LightMsg::ChangeColor(23, 88, 233));
+    s.send(LightMsg::Disconnect);
+    s.send(LightMsg::Off);
+
+    let light_status = light.join();
+
+}
 
 #[cfg(test)]
 mod test {
