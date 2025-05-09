@@ -18,4 +18,37 @@
 // * Use the .next() method to advance the iterator to confirm it works correctly
 // * Only the Iterator trait needs to be implemented for this activity
 
-fn main() {}
+struct Score{
+    scores: isize,
+    powerup: isize
+}
+impl Score {
+    fn new(scores: isize, powerup: isize) -> Self {
+        Self { scores, powerup }
+    }
+}
+impl Iterator for Score {
+    type Item = isize;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.scores += self.powerup;
+        if self.powerup >= 0{
+            Some(self.scores)
+        } else {
+            None
+        }
+        
+    }
+    
+}
+
+fn main() {
+    let mut score = Score::new(0, 10);
+    println!("{:?}", score.next());
+    println!("{:?}", score.next());
+    println!("{:?}", score.next());
+    println!("{:?}", score.next());
+    println!("{:?}", score.next());
+    println!("{:?}", score.next());
+    println!("{:?}", score.next());
+}

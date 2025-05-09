@@ -15,4 +15,5 @@ chrono = "0.4.40"
 thiserror = "*"
 crossbeam-channel = "*"
 colored = "*"
+parking_lot = "*"
 
